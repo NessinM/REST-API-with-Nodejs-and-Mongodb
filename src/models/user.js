@@ -30,13 +30,13 @@ export const getOne =   async (req, res) => {
 }
 
 export const add =  async (req, res) => {
-  const user      = req.body.user
-  const nombre    = req.body.nombre
-  const apellido  = req.body.apellido
-  const email     = req.body.email
-  const password  = req.body.password
-  const role      = req.body.role
-  const documento = req.body.documento
+  const user      = req.body.user || ''
+  const nombre    = req.body.nombre || ''
+  const apellido  = req.body.apellido || ''
+  const email     = req.body.email  || ''
+  const password  = req.body.password || ''
+  const role      = req.body.role || ''
+  const documento = req.body.documento || 0
 
   const new_user = {
     user,
@@ -71,13 +71,14 @@ export const remove =  async (req, res) => {
 }
 
 export const update =  async (req, res) => {
-  const id       = req.params.id
-  const user     = req.body.user
-  const nombre   = req.body.nombre
-  const apellido = req.body.apellido
-  const email    = req.body.email
-  const password = req.body.password
-  const role     = req.body.role
+  const id        = req.params.id
+  const user      = req.body.user || ''
+  const nombre    = req.body.nombre || ''
+  const apellido  = req.body.apellido || ''
+  const email     = req.body.email  || ''
+  const password  = req.body.password || ''
+  const role      = req.body.role || ''
+  const documento = req.body.documento || 0
 
   const new_user = {
     user,
@@ -85,7 +86,8 @@ export const update =  async (req, res) => {
     apellido,
     email   ,
     password : bcrypt.hashSync(password, bsalt),
-    role
+    role,
+    documento
   }
 
   const resultado = await api.mongo.user.action('updateOne', {_id : id, ...new_user})
@@ -101,15 +103,15 @@ export const update =  async (req, res) => {
 const userPasswordIsMatch = (password, hash, callback) => {
   bcrypt.compare(password, hash, (err, isMatch) =>  {
     if (err) callback('No se pudo decifrar el password')
-    else (!isMatch) ? callback('¡La contraseña no coincide!') : callback(null)
+    else (!isMatch) ? callback('¡La contraseña ingresada no coincide!') : callback(null)
   })
 }
 
 export const login = async (req, res) => {
-  const documento = req.body.documento
-  const password  = req.body.password
+  const documento = req.body.documento || 0
+  const password  = req.body.password  || ''
   const resultado = await api.mongo.user.action('findOne', { documento })
-  const response  = await resultado[0]
+  const response  = resultado[0]
   if (!response.status)  res.send(general.trowError(response.message))
   else {
     userPasswordIsMatch(password, response.data.password, error => {

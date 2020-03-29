@@ -3,7 +3,7 @@ import config      from '../utils/config'
 import general     from '../utils/general'
 
 export const connect = async () => {
-  const response  = {}
+  let response  = {}
   try {
     const client    = await MongoClient.connect(config.mongodb.url, config.mongodb.use)
     const db        = client.db(config.mongodb.name)
