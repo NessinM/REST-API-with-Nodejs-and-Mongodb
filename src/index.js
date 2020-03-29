@@ -3,9 +3,8 @@ import app        from './server'
 import config     from './utils/config'
 
 const main = async () => {
-  const port = process.env.PORT || config.port
-  await app.listen(port);
-  console.log(`Servidor Inicializado en entorno ${config.env} en el puerto ${port}`);
+  const server = await app.listen(process.env.PORT || config.port)
+  console.log(`[${config.env}] Servidor Inicializado en el puerto [${server.address().port}]`)
 }
 
 main()

@@ -8,6 +8,7 @@ app.use(cors())
 
 // Routes
 app.use('/',      require('./routes'))
-app.use('/tasks', require('./routes/tasks'))
+app.use('/task', require('./routes/task'))
+app.use('/user', require('./routes/user'))
 
 export default app;

@@ -1,6 +1,7 @@
 const api = {
 	mongo : {
-    task: require('./m_task')
+    task: require('./m_task'),
+    user: require('./m_user')
 	}
 }
 

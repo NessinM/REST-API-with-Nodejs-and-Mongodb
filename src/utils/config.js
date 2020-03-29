@@ -12,6 +12,11 @@ var config = {
         useUnifiedTopology: true,
         useNewUrlParser   : true
       }
+    },
+    auth : {
+      bcrypt : {
+        salt : 8
+      }
     }
   },
   development: {
@@ -25,6 +30,11 @@ var config = {
       use : {
         useUnifiedTopology: true,
         useNewUrlParser   : true
+      }
+    },
+    auth : {
+      bcrypt : {
+        salt : 8
       }
     }
   }

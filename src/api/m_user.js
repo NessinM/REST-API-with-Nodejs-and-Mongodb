@@ -2,7 +2,7 @@ import { connect }  from '../services/database'
 import general      from '../utils/general'
 import { ObjectID } from 'mongodb'
 
-const collection = 'task'
+const collection = 'user'
 
 export const action = async (method = 'find', params = {}) => {
   console.log( `action [${method}] of collection ${collection}`)
