@@ -9,6 +9,7 @@ router.get('/:id',    mw.isLogged, user.getOne)
 router.post('/',      mw.isLogged, user.add)
 router.put('/:id',    mw.isLogged, user.update)
 router.delete('/:id', mw.isLogged, user.remove)
-router.post('/login', mw.isLogged, user.login)
+router.post('/login', user.login)
+router.post('/logout', mw.isLogged, user.logout)
 
 module.exports = router

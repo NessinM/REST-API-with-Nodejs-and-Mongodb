@@ -5,7 +5,7 @@ import { ObjectID } from 'mongodb'
 const collection = 'task'
 
 export const action = async (method = 'find', params = {}) => {
-  console.log( `action [${method}] of collection ${collection} parameters ${JSON.stringify(params)}`)
+  console.log( `action [${method}] of collection ${collection} `)
   let resultado      = null
   let columns     = {}
   const keys      = Object.keys(params)

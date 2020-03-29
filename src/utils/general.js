@@ -1,6 +1,6 @@
-const trowError =  (message) => {
+const trowError =  (message, status = 0) => {
   const response = {
-    status : 0,
+    status,
     message : !message ? 'El error no se ha especificado' : message
   }
 	return response
