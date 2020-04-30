@@ -1,8 +1,7 @@
 const api = {
 	mongo : {
-    task: require('./m_task'),
-    user: require('./m_user')
+    actions: require('./m_actions')
 	}
 }
 
-module.exports = api
+export default api

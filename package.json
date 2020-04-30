@@ -15,9 +15,13 @@
     "@babel/polyfill": "^7.8.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "emailjs": "^2.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.5"
+    "moment": "^2.24.0",
+    "mongodb": "^3.5.5",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

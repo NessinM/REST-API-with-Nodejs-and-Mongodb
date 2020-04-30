@@ -1,83 +1,202 @@
 import bcrypt  from 'bcryptjs'
 import jwt     from 'jsonwebtoken'
 import config  from '../utils/config'
-import general from '../utils/general'
 import api     from '../api'
 
-const bsalt = bcrypt.genSaltSync(config.auth.bcrypt.salt);
+const bsalt      = bcrypt.genSaltSync(config.auth.bcrypt.salt)
+const collection = 'empleado'
 
 export const getAll =  async (req, res) => {
-  const resultado = await api.mongo.user.action('find')
-  const response  = await resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
-  else res.send(response)
-}
-
-export const getOne =   async (req, res) => {
-  const id       = req.params.id
-  const resultado = await api.mongo.user.action('findOne', {_id : id})
-  const response  = await resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
-  else res.send(response)
+  const { _id }                   = req.query
+  let   resultado                 = []
+  if    (!_id) resultado          = await api.mongo.actions.find(collection)
+  else  resultado                 = await api.mongo.actions.findOne(collection, {_id})
+  const { message, status, data } = resultado[0]
+  !status ?  res.send({ status, message }) : res.send({ status, data })
 }
 
 export const add =  async (req, res) => {
-  const user      = req.body.user || ''
-  const nombre    = req.body.nombre || ''
-  const apellido  = req.body.apellido || ''
-  const email     = req.body.email  || ''
-  const password  = req.body.password || ''
-  const role      = req.body.role || ''
-  const documento = req.body.documento || 0
+  const { nombre              ,
+        tipo_documento        ,
+        documento             ,
+        email                 ,
+        fecha_fin_contrato    ,
+        fecha_ingreso         ,
+        perfil                ,
+        cargo                 ,
+        activo                ,
+        regimen               ,
+        area,
+        jefe               ,
+        contrato_indeterminado,
+        fantasma              ,
+        reemplazo_vacaciones  ,
+        apellido_materno      ,
+        apellido_paterno      ,
+        genero                }  = req.body
 
-  const new_user = {
-    user,
-    nombre  ,
-    apellido,
-    email   ,
-    password : bcrypt.hashSync(password, bsalt),
-    role,
-    documento
+  let usuario  = `${nombre.substr(0, 1)}${apellido_paterno}`
+  let avatar   = `${nombre.substr(0, 1)}${apellido_paterno.substr(0, 1)}`
+
+  const response_parametros       = await api.mongo.actions.find('parametros')
+  let   { message, status, data } = response_parametros[0]
+  const parametros = data[0]
+  if (!status)  res.send({ status, message })
+  else {
+
+    let reemplazos = []
+    let datos_jefe = {
+      _id             : jefe._id,
+      nombre          : jefe.nombre,
+      apellido_paterno: jefe.apellido_paterno,
+      apellido_materno: jefe.apellido_materno,
+      avatar          : jefe.avatar,
+      cargo           : jefe.cargo,
+      email           : jefe.email,
+      area            : jefe.area
+    }
+
+
+    reemplazo_vacaciones.forEach(e => {
+      reemplazos.push({
+        _id   : e._id,
+        nombre: `${e.nombre} ${e.apellido_paterno} ${e.apellido_materno}`,
+        avatar: e.avatar,
+        cargo : e.cargo,
+        email : e.email,
+        area  : e.area
+      })
+    })
+
+    const  new_user  = {
+      codigo  : parametros.ultimo_codigo_usuario + 1,
+      usuario : usuario.toLocaleLowerCase(),
+      password: bcrypt.hashSync('123456', bsalt),
+      perfil  : perfil.toLocaleLowerCase(),
+      nombre,
+      apellido_materno,
+      apellido_paterno,
+      area,
+      cargo,
+      email,
+      tipo_documento,
+      documento,
+      periodo_actual  : 1,
+      dias_reales     : 30,
+      dias_disponibles: 30,
+      jefe : datos_jefe,
+      fecha_ingreso,
+      fantasma,
+      activo,
+      reset_token  : '',
+      token_session: '',
+      contrato_indeterminado,
+      fecha_fin_contrato,
+      regimen,
+      reemplazo_vacaciones : reemplazos,
+      avatar : avatar.toUpperCase(),
+      genero
+    }
+
+    const resultado_insert          = await api.mongo.actions.insert(collection, new_user)
+    const { message, status, data } = resultado_insert[0]
+    if (!status) res.send({ status, message })
+    else {
+      const new_parametro = {
+        _id                  : parametros._id,
+        ultimo_codigo_usuario: parametros.ultimo_codigo_usuario + 1
+      }
+
+      const resultado_update = await api.mongo.actions.updateOne('parametros', { ...new_parametro })
+      const response_update  = resultado_update[0]
+      if (!response_update.status) res.send({ status, message : response_update.message })
+      else res.send(response_update)
+    }
   }
-
-  const resultado = await api.mongo.user.action('insert', new_user)
-  const response  = await resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
-  else res.send(response)
-}
-
-export const remove =  async (req, res) => {
-  const id       = req.params.id
-  const resultado = await api.mongo.user.action('remove', {_id : id })
-  const response  = await resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
-  else res.send(response)
 }
 
 export const update =  async (req, res) => {
-  const id        = req.params.id
-  const user      = req.body.user || ''
-  const nombre    = req.body.nombre || ''
-  const apellido  = req.body.apellido || ''
-  const email     = req.body.email  || ''
-  const password  = req.body.password || ''
-  const role      = req.body.role || ''
-  const documento = req.body.documento || 0
+  const { _id                 ,
+        nombre                ,
+        tipo_documento        ,
+        documento             ,
+        email                 ,
+        fecha_fin_contrato    ,
+        fecha_ingreso         ,
+        perfil,
+        area,
+        cargo                 ,
+        activo                ,
+        regimen               ,
+        jefe           ,
+        contrato_indeterminado,
+        fantasma              ,
+        reemplazo_vacaciones  ,
+        apellido_materno      ,
+        apellido_paterno      ,
+        genero                }  = req.body
 
-  const new_user = {
-    user,
-    nombre  ,
-    apellido,
-    email   ,
-    password : bcrypt.hashSync(password, bsalt),
-    role,
-    documento
+  let usuario    = `${nombre.substr(0, 1)}${apellido_paterno}`
+  let avatar     = `${nombre.substr(0, 1)}${apellido_paterno.substr(0, 1)}`
+  let reemplazos = []
+  let datos_jefe = {
+    _id             : jefe._id,
+    nombre          : jefe.nombre,
+    apellido_paterno: jefe.apellido_paterno,
+    apellido_materno: jefe.apellido_materno,
+    avatar          : jefe.avatar,
+    cargo           : jefe.cargo,
+    email           : jefe.email,
+    area            : jefe.area
   }
 
-  const resultado = await api.mongo.user.action('updateOne', {_id : id, ...new_user})
-  const response  = await resultado[0]
-  if (!response.status) res.send(general.trowError(response.message))
-  else res.send(response)
+
+  reemplazo_vacaciones.forEach(e => {
+    reemplazos.push({
+      _id   : e._id,
+      nombre: `${e.nombre} ${e.apellido_paterno} ${e.apellido_materno}`,
+      avatar: e.avatar,
+      cargo : e.cargo,
+      email : e.email,
+      area  : e.area
+    })
+  })
+
+  let   new_user  = {
+    _id,
+    usuario: usuario.toLocaleLowerCase(),
+    perfil : perfil.toLocaleLowerCase(),
+    nombre,
+    apellido_materno,
+    apellido_paterno,
+    area,
+    cargo,
+    email,
+    tipo_documento,
+    documento,
+    jefe: datos_jefe,
+    fecha_ingreso,
+    fantasma,
+    activo,
+    token_session: '',
+    contrato_indeterminado,
+    fecha_fin_contrato,
+    regimen,
+    reemplazo_vacaciones : reemplazos,
+    avatar: avatar.toUpperCase(),
+    genero
+  }
+
+  const resultado_insert          = await api.mongo.actions.updateOne(collection, { ...new_user })
+  const { message, status, data } = resultado_insert[0]
+  !status ?  res.send({ status, message }) : res.send({ status, data })
+}
+
+export const remove =  async (req, res) => {
+  const { _id }                   = req.query
+  const resultado                 = await api.mongo.actions.deleteOne(collection, { _id })
+  const { message, status, data } = resultado[0]
+  !status ? res.send({ status, message }) : res.send({ status, data })
 }
 
 const userPasswordIsMatch = (password, hash, callback) => {
@@ -88,35 +207,38 @@ const userPasswordIsMatch = (password, hash, callback) => {
 }
 
 export const login = async (req, res) => {
-  const documento = req.body.documento || 0
-  const password  = req.body.password  || ''
+  const { documento, password } = req.body
+
+  console.log('documento', documento)
+  console.log('password', password)
 
   if (!documento) {
-    res.send(general.trowError('El numero de identidad no puede estar vacio'))
+    res.send( { status : 0, message : 'El numero de identidad no puede estar vacio'})
     return
   }
 
   if (!password) {
-    res.send(general.trowError('Es necesario ingresar una contraseña'))
+    res.send( { status : 0, message : 'Es necesario ingresar una contraseña'})
     return
   }
+
   //obtener usuario para comparar datos y generar el token
-  const resultado = await api.mongo.user.action('findOne', { documento })
-  const response  = resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
+  const resultado = await api.mongo.actions.find(collection, { documento })
+  const { message, status, data } = resultado[0]
+  if (!status)  res.send({ status, message : `El documento #${documento} no existe`})
   else {
-    userPasswordIsMatch(password, response.data.password, async error => {
-      if (error) res.send(general.trowError(error))
+    userPasswordIsMatch(password, data[0].password, async error => {
+      if (error) res.send({  status : 0, message : error})
       else {
-        const { password, token_session, ...objJWT } = response.data
-        const token     = jwt.sign(objJWT, config.secret)
-        const new_user          = { token_session : token }  //Guardar el token de la session
-        const resultado_update  = await api.mongo.user.action('updateOne', {_id : response.data._id, ...new_user})
-        const response_update   = resultado_update[0]
-        if (!response_update.status)  res.send(general.trowError(response_update.message))
+        const { password, token_session, ...objJWT } = data[0]
+        const token                                  = jwt.sign(objJWT, config.secret)
+        const new_user                               = { token_session : token, _id : data[0]._id, }
+        const resultado_update                       = await api.mongo.actions.updateOne(collection, { ...new_user })
+        const response_update                        = resultado_update[0]
+        if (!response_update.status)  res.send({status: 0, message:  response_update.message})
         else {
-          response.data.token_session = token
-          res.send(response.data)
+          data[0].token_session = token
+          res.send({ status, ...data[0] })
         }
       }
     })
@@ -124,24 +246,21 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  const documento = req.body.documento || 0
-
-  if (!documento) {
-    res.send(general.trowError('El numero de identidad no puede estar vacio'))
-    return
-  }
-
-  const resultado = await api.mongo.user.action('findOne', { documento })
-  const response  = resultado[0]
-  if (!response.status)  res.send(general.trowError(response.message))
-  else {
-    const new_user         = { token_session : '' }
-    const resultado_update = await api.mongo.user.action('updateOne', {_id : response.data._id, ...new_user})
-    const response_update  = resultado_update[0]
-    if (!response_update.status)  res.send(general.trowError(response_update.message))
-    else res.send({status : response_update.status})
-  }
+  const { _id }                   = req.decoded
+  const new_user                  = { token_session : '', _id }
+  const resultado                 = await api.mongo.actions.updateOne(collection, { ...new_user })
+  const { message, status, data } = resultado[0]
+  !status ?  res.send({ status, message }) : res.send({ status, data })
 }
 
+export const getJefes =  async (req, res) => {
+  const response_jefes            = await api.mongo.actions.find(collection, { perfil : "jefe" })
+  const { message, status, data } = response_jefes[0]
+  !status ?  res.send({ status, message }) : res.send({ status, data })
+}
 
-
+export const getAdmins =  async (req, res) => {
+  const response_gerente            = await api.mongo.actions.find(collection, { perfil : "admin" })
+  const { message, status, data } = response_gerente[0]
+  !status ?  res.send({ status, message }) : res.send({ status, data })
+}

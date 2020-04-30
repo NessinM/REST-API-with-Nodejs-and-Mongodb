@@ -1,0 +1,79 @@
+extends ./layout
+
+block body
+  table(align=`center`, border=`0`, cellspacing=`0`, cellpadding=`0`, width=`100%`, bgcolor=`#EDF0F3`, style=`background-color:#EDF0F3; table-layout:fixed`)
+    tbody
+      tr
+        td(align=`center`, )
+          center(style=`width:100%`)
+            table.x_phoenix-email-container(border=`0`, cellspacing=`0`, cellpadding=`0`, width=`512`, bgcolor=`#FFFFFF`, style=`background-color:#FFFFFF; margin:0 auto; max-width:512px; width:inherit`)
+              tbody
+                tr
+                  td
+                    table(border=`0`, cellspacing=`0`, cellpadding=`0`, width=`100%`, )
+                      tbody
+                        tr
+                          td(style=`display: flex;padding: 24px;`)
+                            div(style="display: flex;justify-content: center;flex-direction: column;")
+                              div(style="display: flex;align-items: center;margin-bottom: 14px;padding-bottom: 15px;border-bottom: 1px solid #edf0f3;")
+                                span(style=`color: rgb(106, 108, 109);font-weight: 700;font-size: 21px;border-radius: 39px;line-height: 1.5;background-color: #edf0f3;padding: 15px;margin-right: 18px;`)
+                                  | #{obj.avatar}
+                                span(style=`color:rgb(106, 108, 109); font-weight:700; font-size:18px; line-height:1.5`)
+                                  | #{obj.nombre}
+                                  | #{obj.apellido_paterno}
+                                  | #{obj.apellido_materno}
+                              p(style=`margin:0; color:#4C4C4C; font-weight:400; font-size:14px; line-height:1.5`)
+                                | Registró una solicitud para vacaciones que va desde el
+                                | #{obj.desde}
+                                | hasta el
+                                | #{obj.hasta} y retornará el
+                                | #{obj.retorno},
+                                if obj.isLogged
+                                  a(href=`${obj.url_solicitud}`, target='_blank', style=`font-size: 14px;color: ${obj.color};margin-left: 6px;font-weight: 500;text-decoration: underline;`)
+                                    | mas sobre la solicitud
+                                else
+                                  a(href=`${obj.url_login}`, target='_blank', style=`font-size: 14px;color: ${obj.color};margin-left: 6px;font-weight: 500;text-decoration: underline;`)
+                                    | ¿Deseas iniciar sesión?
+                        if obj.isLogged
+                          tr
+                            td(dir=`ltr`, style=`padding:0 24px 18px`)
+                              span(style=`padding-right:6px`)
+                                table(border=`0`, cellpadding=`0`, cellspacing=`0`, style=`display:inline-block; padding-bottom:6px`)
+                                  tbody
+                                    tr
+                                      td(align=`center`, valign=`middle`, )
+                                        a(href=`${obj.url_aprobar}`, target=`_blank`, rel=`noopener noreferrer`, data-auth=`NotApplicable`, style=`word-wrap:normal; color:${obj.color}; word-break:normal; white-space:nowrap; display:block; text-decoration:none`)
+                                          table(border=`0`, cellspacing=`0`, cellpadding=`0`, width=`auto`, )
+                                            tbody
+                                              tr
+                                                td(bgcolor=`${obj.color}`, style=`padding:6px 16px; color:#FFFFFF; font-weight:500; font-size:16px; border-color: ${obj.color}; background-color:${obj.color}; border-radius:2px; border-width:1px; border-style:solid`)
+                                                  a(href=`${obj.url_aprobar}`, target=`_blank`, rel=`noopener noreferrer`, data-auth=`NotApplicable`, style=`color:#FFFFFF; display:inline-block; text-decoration:none`)
+                                                    | Aprobar
+                              span
+                                table(border=`0`, cellpadding=`0`, cellspacing=`0`, style=`display:inline-block; padding-bottom:6px`)
+                                  tbody
+                                    tr
+                                      td(align=`center`, valign=`middle`, )
+                                        a(href=`${obj.url_rechazar}`, target=`_blank`, rel=`noopener noreferrer`, data-auth=`NotApplicable`, style=`word-wrap:normal; color:${obj.color}; word-break:normal; white-space:nowrap; display:block; text-decoration:none`)
+                                          table(border=`0`, cellspacing=`0`, cellpadding=`0`, width=`auto`, )
+                                            tbody
+                                              tr
+                                                td(style=`border-radius:2px; padding:6px 16px; color:${obj.color}; font-weight:500; font-size:16px; border-color:${obj.color}; border-width:1px; border-style:solid`)
+                                                  a(href=`${obj.url_rechazar}`, target=`_blank`, rel=`noopener noreferrer`, data-auth=`NotApplicable`, style=`color:${obj.color}; display:inline-block; text-decoration:none`)
+                                                    | Rechazar
+  tbody
+    tr
+      td
+        table(border=`0`, cellspacing=`0`, cellpadding=`0`, width=`100%`, style="background-color: #edf0f3")
+          tbody
+            tr
+              td(align=`center`, style=`padding:20px;    padding-bottom: 4px; text-align:center`)
+                p(style=`margin:0; word-wrap:break-word; color:#6A6C6D; word-break:break-word; font-weight:400; font-size:12px; line-height:1.333`)
+                  | Este mensaje de correo electrónico estaba dirigido
+                  | a #{obj.nombre_jefe}
+            tr
+              td(align=`center`, style=`padding:0 0 12px 0; text-align:center`)
+                p(style=`margin:0; color:#6A6C6D; font-weight:400; font-size:12px; line-height:1.333`)
+                  | Datacont SAC • Av. Republica de panama 3517 San Isidro - Lima - Peru
+                p(style=`margin:0; color:#6A6C6D; font-weight:400; font-size:12px; line-height:1.333`)
+                  | © 2020 Self Service

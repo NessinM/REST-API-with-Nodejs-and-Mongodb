@@ -1,6 +1,5 @@
 import MongoClient from 'mongodb'
 import config      from '../utils/config'
-import general     from '../utils/general'
 
 export const connect = async () => {
   let response  = {}
@@ -10,7 +9,7 @@ export const connect = async () => {
     response.status = 1
     response.db     = db
   } catch(e) {
-    response = general.trowError(`Error al intentar conectar con la BD ${config.mongodb.name}, Verificar si los servicios de MongoDB se encuentran Inicializados`)
+    response =  { status : 0, message : `Error al intentar conectar con la BD ${config.mongodb.name}, Verificar si los servicios de MongoDB se encuentran Inicializados` }
   } finally {
     return response
   }
