@@ -1,21 +1,27 @@
+const chalk = require('chalk');
 import { connect }  from "../services/database"
 import { ObjectID } from "mongodb"
+import config       from '../utils/config'
 
-export const find = async (collection = ``, query = {} ) => {
-  console.log(`MONGODB action  find from ${collection}`)
+const log = console.log;
+
+export const find = async (collection = ``, query = {}, debug = false ) => {
+  log(`action ${chalk.yellow('find')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
+  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
     let data = []
     await db.collection(collection).find(query).toArray()
-            .then((result) => data = result )
-            .catch((err) => console.error(`Error al encontrar el documento : ${err}`))
+            .then(result => data = result )
+            .catch(err => console.error(`Error al encontrar el documento : ${err}`))
     return [{ status,  data }]
   }
 }
 
-export const findOne = async (collection = ``, query = {} ) => {
-  console.log(`MONGODB action  findOne from ${collection}`)
+export const findOne = async (collection = ``, query = {}, debug = false ) => {
+  log(`action ${chalk.yellow('findOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
+  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -27,8 +33,9 @@ export const findOne = async (collection = ``, query = {} ) => {
   }
 }
 
-export const insert = async (collection = ``, columns = {} ) => {
-  console.log(`MONGODB action  insert from ${collection}`)
+export const insert = async (collection = ``, columns = {}, debug = false ) => {
+  log(`action ${chalk.yellow('insert')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
+  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -40,8 +47,9 @@ export const insert = async (collection = ``, columns = {} ) => {
   }
 }
 
-export const updateOne = async (collection = ``, columns = {} ) => {
-  console.log(`MONGODB action  updateOne from ${collection}`)
+export const updateOne = async (collection = ``, columns = {}, debug = false ) => {
+  log(`action ${chalk.yellow('updateOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
+  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -54,8 +62,9 @@ export const updateOne = async (collection = ``, columns = {} ) => {
   }
 }
 
-export const deleteOne = async (collection = ``, query = {} ) => {
-  console.log(`MONGODB action  deleteOne from ${collection}`)
+export const deleteOne = async (collection = ``, query = {}, debug = false ) => {
+  log(`action ${chalk.yellow('deleteOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
+  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {

@@ -1,0 +1,61 @@
+{
+  "nombre                  ": "Nesyn Meomer",
+  "apellidos               ": "Alvarado Bedoya",
+  "reporta_a               ": "",
+  "email                   ": "nalvarado",
+  "oficina                 ": "",
+  "equipos                 ": [],
+  "ultimos_cambios         ": [],
+  "fecha_nacimiento        ": "",
+  "genero                  ": "",
+  "nacionalidad            ": "",
+  "telefono                ": "",
+  "numero_iban             ": "",
+  "documento               ": "76642347",
+  "direccion_1             ": "",
+  "direccion_2             ": "",
+  "ciudad                  ": "",
+  "codigo_postal           ": "",
+  "region                  ": "",
+  "pais                    ": "",
+  "nombre_emergencia       ": "",
+  "telefono_emergencia     ": "",
+  "contrato_actual         ": "",
+  "fecha_registro          ": "",
+  "cargo                   ": "",
+  "tipo_salario            ": "",
+  "monto_salario           ": "",
+  "horas_a_laborar         ": "",
+  "unidad_a_laborar        ": "",
+  "dias_a_laborar          ": [],
+  "compensasiones_variables": [],
+  "usuario                 ": "",
+  "password                ": "",
+  "perfil                  ": "",
+  "tipo_documento          ": "DNI",
+  "activo                  ": "",
+  "reset_token             ": "",
+  "session_token           ": "",
+  "contrato_indeterminado  ": "",
+  "regimen                 ": "",
+  "avatar                  ": "NA",
+  "area                    ": ""
+}
+
+[{
+  "_id": {
+    "$oid": "5eac15feebd2100448cd030c"
+  },
+  "icon": "group",
+  "icon_alt": "mdi-chevron-down",
+  "text": "Empleados",
+  "description": "",
+  "path": "/empleados",
+  "open": false,
+  "badge": false,
+  "children": [],
+  "allows": [
+    "admin"
+  ]
+}]
+

@@ -26,7 +26,7 @@ var config = {
     secret           : 'liatris_2021',
     mongodb          : {
       url : 'mongodb://localhost:27017',
-      name: 'liatris',
+      name: 'liatris_hr',
       use : {
         useUnifiedTopology: true,
         useNewUrlParser   : true
