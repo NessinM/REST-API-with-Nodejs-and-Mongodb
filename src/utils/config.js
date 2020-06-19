@@ -47,8 +47,8 @@ var config = {
     },
     empresa : {
       logo  : 'http://sil.datacont.com/static/logo.png',
-      nombre: 'DATACONT SAC',
-      color : '#b80813'
+      nombre: 'Liatris HR',
+      color : '#832eff'
     },
     public : {
       base_url : 'http://localhost:8080'

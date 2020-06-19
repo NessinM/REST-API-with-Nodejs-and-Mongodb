@@ -7,8 +7,8 @@ const bsalt      = bcrypt.genSaltSync(config.auth.bcrypt.salt)
 const collection = 'user'
 
 export const get =  async (req, res) => {
-  const { _id }                   = req.query
-  const  [{ message, status, data }] = !_id ? await api.mongo.actions.find(collection) : await api.mongo.actions.findOne(collection, { _id })
+  const { _id }                     = req.query
+  const [{ message, status, data }] = !_id ? await api.mongo.actions.find(collection) : await api.mongo.actions.findOne(collection, { _id })
   !status ?  res.send({ status, message }) : res.send({ status, data })
 }
 
