@@ -67,17 +67,4 @@ export const deleteOne = async (collection = ``, query = {} ) => {
   }
 }
 
-export const findOneAndUpdate = async (collection = ``, columns = {} ) => {
-  console.log(`MONGODB action  deleteOne from ${collection}`)
-  const { status, db, message } = await connect()
-  if (!status)  return [{ status, message }]
-  else {
-    let data = {}
-    const {_id, ...oUpdate} = columns
-    await db.collection(collection).findOneAndUpdate({ _id : ObjectID(columns._id) }, { $set : oUpdate }, { returnNewDocument: true })
-            .then(result => data = result )
-            .catch(err => console.error(`Error al obtener y modificar el documento : ${err}`))
-    return [{ status, data }]
-  }
-}
 

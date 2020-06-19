@@ -23,22 +23,18 @@ var config = {
     port             : 4000,
     env              : environment,
     dev              : true,
-    secret           : 'app_2021!',
-    api_router_client: 'http://localhost:8080',
+    secret           : 'liatris_2021',
     mongodb          : {
       url : 'mongodb://localhost:27017',
-      name: 'self_service',
+      name: 'liatris',
       use : {
         useUnifiedTopology: true,
         useNewUrlParser   : true
       }
     },
-    cryptojs : {
-      secret : 'self_service_2021'
-    },
     auth : {
       mails : {
-        nalvarado : {
+        config : {
           user    : "nalvarado@datacont.com",
           password: "kirati#12",
           host    : "webmail.datacont.com",
@@ -53,6 +49,9 @@ var config = {
       logo  : 'http://sil.datacont.com/static/logo.png',
       nombre: 'DATACONT SAC',
       color : '#b80813'
+    },
+    public : {
+      base_url : 'http://localhost:8080'
     }
   }
 };

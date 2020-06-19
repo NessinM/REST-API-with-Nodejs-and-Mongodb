@@ -4,26 +4,21 @@ var email  = require('emailjs')
   , path   = require('path')
   ;
 
-var send = function(obj, callback) {
-  var nombreFull = config.empresa.nombre
-  obj.logo       = config.empresa.logo
-  obj.data.logo  = config.empresa.logo
-  obj.data.color = config.empresa.color
-
-  var server        = email.server.connect(config.auth.mails.nalvarado)
-  var plantillaMail = path.join(process.cwd(), 'template_mail', `${obj.template}.pug`);
-  var options       = { obj: obj.data }
+var send = function({ data, template, to, prefix, subject, bcc,  }, callback) {
+  var server        = email.server.connect(config.auth.mails.config)
+  var plantillaMail = path.join(process.cwd(), 'template_mail', `${template}.pug`);
+  var options       = { obj: data }
 
   var body = pug.renderFile(plantillaMail, options);
 
-  if (config.dev)  obj.to = 'nalvarado@datacont.com'
+  if (config.dev)  to = 'nalvarado@datacont.com'
 
   var mensaje =   {
-    text      : `${obj.prefix} ${obj.subject}`,
-    from      : `SELF SERVICE ${nombreFull} `,
-    to        : obj.to,
-    bcc       : obj.bcc,
-    subject   : `${obj.subject}`,
+    text      : `${prefix} ${subject}`,
+    from      : `LIATRIS HR ${nombreFull}`,
+    to        : to,
+    bcc       : bcc,
+    subject   : subject,
     attachment:
     [
       {

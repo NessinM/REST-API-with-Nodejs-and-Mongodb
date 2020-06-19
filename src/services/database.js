@@ -9,7 +9,7 @@ export const connect = async () => {
     response.status = 1
     response.db     = db
   } catch(e) {
-    response =  { status : 0, message : `Error al intentar conectar con la BD ${config.mongodb.name}, Verificar si los servicios de MongoDB se encuentran Inicializados` }
+    response =  { status : 0, message : `Error al intentar conectar con la BD ${config.mongodb.name}, Verificar si los servicios de MongoDB se encuentrán Inicializados, de no ser asi ejecutar (mongod)` }
   } finally {
     return response
   }

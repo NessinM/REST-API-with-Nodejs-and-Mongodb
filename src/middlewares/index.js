@@ -11,5 +11,5 @@ export const isLogged = async (req, res, next) => {
         next()
       }
     })
-  } else res.send({ status : 302, message  : 'En token de la session no puede estar vacio' })
+  } else res.send({ status : 302, message  : 'El token de la session no puede estar vacio' })
 }

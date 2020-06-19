@@ -1,6 +1,6 @@
 const api = {
 	mongo : {
-    actions: require('./m_actions')
+    actions: require('./mongo_actions')
 	}
 }
 
