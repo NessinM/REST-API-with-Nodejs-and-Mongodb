@@ -10,6 +10,8 @@ app.use(cors())
 app.use('/',                   require('./routes'))
 app.use('/menu',               require('./routes/menu'))
 app.use('/user',               require('./routes/user'))
+app.use('/oficina',            require('./routes/oficina'))
+app.use('/contrato',           require('./routes/contrato'))
 // app.use('/vacacion',           require('./routes/vacacion'))
 // app.use('/solicitud_vacacion', require('./routes/solicitud_vacacion'))
 

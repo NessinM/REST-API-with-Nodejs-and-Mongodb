@@ -1,4 +1,5 @@
 import bcrypt  from 'bcryptjs'
+import moment from 'moment'
 import jwt     from 'jsonwebtoken'
 import config  from '../utils/config'
 import api     from '../api'
@@ -27,7 +28,6 @@ export const login = async (req, res) => {
   else {
     if (data.length === 0)  res.send({ status : 0, message : `El numero de ${tipo_documento} no se encuentra registrado`})
     else {
-      console.log('data', data)
       let [usuario] = data
       userPasswordIsMatch(password, usuario.password, async error => {
         if (error) res.send({ status : 0, message : error})
@@ -47,7 +47,6 @@ export const login = async (req, res) => {
   }
 }
 
-
 export const logout = async (req, res) => {
   const { _id }                    = req.decoded
   const [{ message, status, data }] = await api.mongo.actions.updateOne(collection, { token_session : '', _id })
@@ -55,91 +54,57 @@ export const logout = async (req, res) => {
 }
 
 export const add =  async (req, res) => {
-  const { nombre,
-          apellidos,
-          reporta_a,
-          email,
-          oficina,
-          equipos,
-          ultimos_cambios,
-          fecha_nacimiento,
-          genero,
-          nacionalidad,
-          telefono,
-          numero_iban,
-          documento,
-          direccion_1,
-          direccion_2,
-          ciudad,
-          codigo_postal,
-          region,
-          pais,
-          nombre_emergencia,
-          telefono_emergencia,
-          contrato_actual,
-          fecha_registro,
-          cargo,
-          tipo_salario,
-          monto_salario,
-          horas_a_laborar,
-          unidad_a_laborar,
-          dias_a_laborar,
-          compensasiones_variables,
-          usuario,
-          password,
-          perfil,
-          tipo_documento,
-          activo,
-          reset_token,
-          session_token,
-          contrato_indeterminado,
-          regimen,
-          avatar,
-          area  }  = req.body
-  console.log('req.body', req.body)
+  const { tipo_documento, documento, nombre, apellidos, email  }  = req.body
+  const new_user = {
+    nombre,
+    apellidos,
+    email,
+    tipo_documento,
+    documento,
+    avatar                  : `${nombre.toUpperCase().substr(0, 1)}${apellidos.toUpperCase().substr(0, 1)}`,
+    reporta_a               : '',
+    oficina                 : '',
+    equipos                 : [],
+    ultimos_cambios         : [],
+    fecha_nacimiento        : '',
+    genero                  : '',
+    nacionalidad            : '',
+    telefono                : '',
+    numero_iban             : '',
+    direccion_1             : '',
+    direccion_2             : '',
+    ciudad                  : '',
+    codigo_postal           : '',
+    region                  : '',
+    pais                    : '',
+    nombre_emergencia       : '',
+    telefono_emergencia     : '',
+    contrato_actual         : '',
+    fecha_creacion          : moment().format('DD/MM/YYYY HH:ss'),
+    compensasiones_variables: [],
+    usuario                 : `${nombre.toUpperCase().substr(0, 1)}_liatris`,
+    password                : bcrypt.hashSync('123456', bsalt),
+    perfil                  : 'usuario',
+    activo                  : true,
+    reset_token             : '',
+    session_token           : '',
+    regimen                 : 'General',
+    area                    : '',
+    url_image               : '',
+  }
 
-  // const  new_user  = {
-  //   codigo  : parametros.ultimo_codigo_usuario + 1,
-  //   usuario : usuario.toLocaleLowerCase(),
-  //   password: bcrypt.hashSync('123456', bsalt),
-  //   perfil  : perfil.toLocaleLowerCase(),
-  //   nombre,
-  //   apellido_materno,
-  //   apellido_paterno,
-  //   area,
-  //   cargo,
-  //   email,
-  //   tipo_documento,
-  //   documento,
-  //   periodo_actual  : 1,
-  //   dias_reales     : 30,
-  //   dias_disponibles: 30,
-  //   jefe : datos_jefe,
-  //   fecha_ingreso,
-  //   fantasma,
-  //   activo,
-  //   reset_token  : '',
-  //   token_session: '',
-  //   contrato_indeterminado,
-  //   fecha_fin_contrato,
-  //   regimen,
-  //   reemplazo_vacaciones : reemplazos,
-  //   avatar : avatar.toUpperCase(),
-  //   genero
-  // }
 
-  // const resultado_insert          = await api.mongo.actions.insert(collection, new_user)
-  // const { message, status, data } = resultado_insert[0]
-  // if (!status) res.send({ status, message })
-  // else {
-  //   const new_parametro = {
-  //     _id                  : parametros._id,
-  //     ultimo_codigo_usuario: parametros.ultimo_codigo_usuario + 1
-  //   }
+  const [{message, status, data }] = await api.mongo.actions.insert(collection, { ...new_user })
+  !status ? res.send({ status, message }) : res.send({status, data})
+}
 
-  //   const resultado_update = await api.mongo.actions.updateOne('parametros', { ...new_parametro })
-  //   const response_update  = resultado_update[0]
-  //   if (!response_update.status) res.send({ status, message : response_update.message })
-  //   else res.send(response_update)
-  // }
+export const update =  async (req, res) => {
+  const o_usuario = req.body
+  const new_user  = { ...o_usuario }
+  if (o_usuario.nombre) {
+    new_user.usuario = `${o_usuario.nombre.substr(0, 1)}_liatris`
+    new_user.avatar  = `${o_usuario.nombre.toUpperCase().substr(0, 1)}${o_usuario.apellidos.toUpperCase().substr(0, 1)}`
+  }
+  const [{message, status, data }]          = await api.mongo.actions.updateOne(collection, new_user)
+  !status ?  res.send({ status, message }) : res.send({ status, data })
 }

@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+import chalk from 'chalk'
 import { connect }  from "../services/database"
 import { ObjectID } from "mongodb"
 import config       from '../utils/config'
@@ -7,7 +7,7 @@ const log = console.log;
 
 export const find = async (collection = ``, query = {}, debug = false ) => {
   log(`action ${chalk.yellow('find')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
-  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
+  if (debug && config.dev) log(query)
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -21,7 +21,7 @@ export const find = async (collection = ``, query = {}, debug = false ) => {
 
 export const findOne = async (collection = ``, query = {}, debug = false ) => {
   log(`action ${chalk.yellow('findOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
-  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
+  if (debug && config.dev) log(query)
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -35,7 +35,7 @@ export const findOne = async (collection = ``, query = {}, debug = false ) => {
 
 export const insert = async (collection = ``, columns = {}, debug = false ) => {
   log(`action ${chalk.yellow('insert')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
-  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
+  if (debug && config.dev) log(columns)
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
@@ -49,22 +49,22 @@ export const insert = async (collection = ``, columns = {}, debug = false ) => {
 
 export const updateOne = async (collection = ``, columns = {}, debug = false ) => {
   log(`action ${chalk.yellow('updateOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
-  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
+  if (debug && config.dev) log(columns)
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
-    let data = {}
+    let response = { status : 0 }
     const {_id, ...oUpdate} = columns
     await db.collection(collection).updateOne({ _id : ObjectID(columns._id) }, { $set : oUpdate })
-            .then(result => data = result )
-            .catch(err => console.error(`Error al actualizar el documento : ${err}`))
-    return [{ status, data }]
+            .then(result => { response.status = 1, response.data = result } )
+            .catch(err =>  response.message = err.errmsg)
+    return [response]
   }
 }
 
 export const deleteOne = async (collection = ``, query = {}, debug = false ) => {
   log(`action ${chalk.yellow('deleteOne')} in the collection ${chalk.green(collection)} of the ${chalk.green(config.mongodb.name)} database `)
-  if (debug && config.dev) log(`Query --> `, JSON.stringify(query))
+  if (debug && config.dev) log(query)
   const { status, db, message } = await connect()
   if (!status)  return [{ status, message }]
   else {
