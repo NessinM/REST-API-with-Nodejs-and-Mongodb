@@ -20,7 +20,7 @@
     "emailjs": "^2.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.5.5",
     "pug": "^2.0.4"
   },
